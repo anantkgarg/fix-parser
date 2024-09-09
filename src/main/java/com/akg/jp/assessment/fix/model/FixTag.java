@@ -25,9 +25,9 @@ public enum FixTag implements FIXTagInterface {
     TRANSACT_TIME(60, DataType.UTCTimeStamp, TagType.MANDATORY),
     ORDER_TYPE(40, DataType.Char, TagType.MANDATORY),
     ACCOUNT_ID(1, DataType.String),
-    CLIENT_ID(109, DataType.String),
+    //CLIENT_ID(109, DataType.String),
     ORDER_QTY(38, DataType.Long),
-    PRICE(44, DataType.Double),
+   // PRICE(44, DataType.Double),
     //Group repeating tag
     NO_ALLOCS(78, DataType.Int, true, 2),
     ALLOC_ACCOUNT(79, DataType.String, NO_ALLOCS),

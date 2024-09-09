@@ -2,26 +2,33 @@ package com.akg.jp.assessment.fix.parser.impl;
 
 import com.akg.jp.assessment.fix.exception.InvalidMessageException;
 import com.akg.jp.assessment.fix.model.FixTag;
+import com.akg.jp.assessment.fix.parser.FIXMessage;
 import com.akg.jp.assessment.fix.parser.FIXParser;
 
 
 public class FIXParserImpl implements FIXParser {
 
 
-    private boolean isProcessingTag, isProcessingValue, isParentTag, isRepeatingGroup;
+    private boolean isProcessingTag, isProcessingValue;//, isParentTag, isRepeatingGroup;
     private FixTag currentTag;
 
+    private final FIXMessageType fixMessageType;
+
+    public FIXParserImpl(FIXMessageType fixMessageType) {
+        this.fixMessageType = fixMessageType;
+    }
+
     @Override
-    public FIXMessage parse(byte[] msg) throws InvalidMessageException {
-        FIXMessage fixMessage = null;
+    public FIXMessageWithPrimitiveArrays parse(byte[] msg) throws InvalidMessageException {
+        FIXMessageWithPrimitiveArrays fixMessage = null;
         if (msg != null) {
-            fixMessage = new FIXMessage();
+            fixMessage = FIXMessageFactory.createFIXMessage(fixMessageType);
             //Copy message to fix message
             fixMessage.copyMessage(msg);
             isProcessingTag = true;
             isProcessingValue = false;
-            isParentTag = false;
-            isRepeatingGroup = false;
+//            isParentTag = false;
+//            isRepeatingGroup = false;
             currentTag = FixTag.UNKNOWN;
 
             for (int i = 0 ; i < msg.length; ) {
@@ -31,7 +38,7 @@ public class FIXParserImpl implements FIXParser {
         return fixMessage;
     }
 
-    private int processBytesFrom(FIXMessage fixMessage, int index) throws InvalidMessageException {
+    private int processBytesFrom(FIXMessageWithPrimitiveArrays fixMessage, int index) throws InvalidMessageException {
         int result = -1;
         if (fixMessage.getRawMessage()[index] == EQUALS) {
             isProcessingTag = false;
@@ -49,12 +56,10 @@ public class FIXParserImpl implements FIXParser {
         return result;
     }
 
-    private int processValue(FIXMessage fixMessage, int index) throws InvalidMessageException {
-
+    private int processValue(FIXMessageWithPrimitiveArrays fixMessage, int index) throws InvalidMessageException {
         if(currentTag == FixTag.UNKNOWN) {
             throw new InvalidMessageException("Invalid FIX message with invalid Tags ");
         }
-
         int result = index;
         int length = 0;
         for(; result < fixMessage.getRawMessage().length; result++) {
@@ -68,7 +73,7 @@ public class FIXParserImpl implements FIXParser {
         return result;
     }
 
-    private int processTag(FIXMessage fixMessage, int index) throws InvalidMessageException {
+    private int processTag(FIXMessageWithPrimitiveArrays fixMessage, int index) throws InvalidMessageException {
         int result = index;
         int tag = 0;
         for(; result < fixMessage.getRawMessage().length; result++) {
@@ -79,13 +84,13 @@ public class FIXParserImpl implements FIXParser {
             tag = (tag * 10) + (b - '0');
         }
         currentTag = FixTag.byValue(tag);
-        if (currentTag.isParentOfRepeatingTag()) {
+        /*if (currentTag.isParentOfRepeatingTag()) {
             isParentTag = true;
         } else if(currentTag.isRepeatingTag()) {
             isRepeatingGroup = true;
         } else {
             isParentTag = isRepeatingGroup = false;
-        }
+        }*/
         fixMessage.updateTagIndex(currentTag, index, (result-index));
         return result;
     }

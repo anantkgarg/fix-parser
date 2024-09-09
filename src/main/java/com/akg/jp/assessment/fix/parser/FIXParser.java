@@ -1,7 +1,7 @@
 package com.akg.jp.assessment.fix.parser;
 
 import com.akg.jp.assessment.fix.exception.InvalidMessageException;
-import com.akg.jp.assessment.fix.parser.impl.FIXMessage;
+import com.akg.jp.assessment.fix.parser.impl.FIXMessageWithPrimitiveArrays;
 
 public interface FIXParser {
     char DELIMITER = '\u0001';
