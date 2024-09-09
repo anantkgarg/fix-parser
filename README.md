@@ -13,7 +13,6 @@ Constraints:
 ```
 
 ## Highlights
-
 1. 100% Code Coverage of Concrete Implementation Classes in `com.akg.jp.assessment.fix.parser.impl` package.
 2. No external libraries (except JUnit)
 
@@ -55,6 +54,10 @@ ________________________________________________________________________________
            FIXMessageWithCollections |               800000 |                 3767 ms |                           4.71 Micro/msg|          -19.00 Mb |      0.24 Gb 
            FIXMessageWithCollections |              1000000 |                 4755 ms |                           4.76 Micro/msg|          122.50 Mb |      0.24 Gb 
 ```
+
+## Project tree structure
+
+![img_1.png](img_1.png)
 
 ## Usage
 To use the parser we need to create an instance of type `com.akg.jp.assessment.fix.parser.FIXParser`, which is an `interface`. The `interface com.akg.jp.assessment.fix.parser.FIXParser` exposes only single method `FIXMessage parse(byte[] msg) throws InvalidMessageException`.
